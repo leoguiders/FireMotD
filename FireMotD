@@ -282,6 +282,7 @@ ExplorePlatform () {
   Dmi="$(echo "$Dmesg" | grep "DMI:")"
   Rasp="$(echo "$Dmesg" | grep "Raspberry")"
   Xen="$(echo "$Dmesg" | grep -i 'xen version')"
+  Odroid="$(echo "$Dmesg" | grep "Hardkernel")"
   [[ -f "/proc/1/comm" ]] && InitSystem="$(cat /proc/1/comm)"
   if [[ "$Dmi" = *"QEMU"* ]] ; then
     Platform="$(echo "$Dmi" | sed 's/^.*QEMU/QEMU/' | sed 's/, B.*//')"
@@ -301,6 +302,8 @@ ExplorePlatform () {
     Platform="Xen Hypervisor v""$(echo "$Xen" | sed -n -e 's/^.*Xen version: //p')"
   elif [[ "$Rasp" = *"Rasp"* ]] ; then
     Platform=${Rasp//*: /}
+  elif [[ "$Odroid" = *"Hardkernel"* ]] ; then 
+    Platform=${Odroid//*: /}
   elif [[ $(uname -r) =~ pine64-longsleep ]] ; then
     Platform="Pine A64"
     _mem="$(< /proc/meminfo grep MemTotal | awk '{print $2}')"
